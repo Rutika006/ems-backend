@@ -1,21 +1,24 @@
-# Use an official OpenJDK image
+# Use official Eclipse Temurin JDK 17 base image
 FROM eclipse-temurin:17-jdk
 
 # Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
+# Copy Maven wrapper and project files
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
-# Download dependencies
-RUN ./mvnw dependency:go-offline
+# Download Maven dependencies (without running tests)
+RUN ./mvnw dependency:go-offline -B
 
-# Copy the rest of the project
+# Copy all project files
 COPY . .
 
-# Package the application
-RUN ./mvnw package -DskipTests
+# Build the application without running tests
+RUN ./mvnw clean package -DskipTests -B
 
-# Run the JAR file
+# Expose the port your Spring Boot app runs on (default is 8080)
+EXPOSE 8080
+
+# Run the Spring Boot JAR file
 CMD ["java", "-jar", "target/ems-0.0.1-SNAPSHOT.jar"]
