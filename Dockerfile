@@ -1,20 +1,23 @@
 # Use an official OpenJDK image
 FROM eclipse-temurin:17-jdk
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml files
+# Copy Maven wrapper and pom.xml
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
-# Download Maven dependencies (offline build)
+# ✅ Fix permission issue
+RUN chmod +x mvnw
+
+# Download dependencies
 RUN ./mvnw dependency:go-offline
 
-# Copy the entire project source
+# Copy the rest of the project
 COPY . .
 
-# Build the application (skip tests to speed up)
+# Package the application
 RUN ./mvnw package -DskipTests
 
 # Run the JAR file
