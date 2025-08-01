@@ -4,11 +4,11 @@ FROM eclipse-temurin:17-jdk
 # Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml first to cache dependencies
+# Copy Maven wrapper and pom.xml
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
-# ✅ Give execute permission to mvnw
+# ✅ Make mvnw executable
 RUN chmod +x mvnw
 
 # Download dependencies
